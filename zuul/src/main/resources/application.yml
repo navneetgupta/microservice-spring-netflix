@@ -1,0 +1,56 @@
+zuul:
+  routes:
+    student:
+      path: /api/v1/studentservice/**
+      service-id: student-services 
+    employee:
+      path: /api/v1/employeeservice/**
+      service-id: employee-services
+    fallback:
+      path: /api/v1/**
+      service-id: student-services
+  
+server:
+  port: 8082
+
+
+spring:
+  application:
+     name : zuul-services
+  datasource:
+    url : ${tacmeDataSource}
+    username : ${tacmeDataSourceUserName}
+    password : ${tacmeDataSourcePassword}
+    testWhileIdle : true
+    validationQuery : SELECT 1
+    max-active: 20
+    max-idle: 10
+    min-idle: 5
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: none
+security:
+  basic:
+    enabled: false
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+      
+logging:
+  level:
+    root: INFO
+    
+hystrix:
+    command:
+        default:
+            execution:
+                isolation:
+                    thread:
+                        timeoutInMilliseconds: 120000
+                    semaphore:
+                        maxConcurrentRequests: 1024
